@@ -171,10 +171,6 @@ Each release includes:
 - ✅ macOS 10.15+ (x64)
 - ✅ Linux (Ubuntu 18.04+, AppImage)
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## AI Creation
 
 This entire application was created by an AI assistant using Claude Sonnet 4. The AI designed, implemented, and optimized all aspects of the application including:
