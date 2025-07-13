@@ -3,8 +3,6 @@
   "productName": "Pomodoro Timer",
   "version": "1.0.0",
   "identifier": "com.pomodoro-timer.app",
-  "description": "A beautiful Pomodoro timer app built with Tauri",
-  "author": "AI Assistant",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
