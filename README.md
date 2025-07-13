@@ -2,7 +2,7 @@
 
 A beautiful and functional Pomodoro timer application built with Tauri (Rust + TypeScript) and created entirely by AI. This app helps you stay focused and productive using the Pomodoro Technique.
 
-![Pomodoro Timer App](https://via.placeholder.com/800x600/2c3e50/ffffff?text=Pomodoro+Timer+App)
+![Pomodoro Timer App](assets/pomodoro.gif)
 
 ## Features
 
