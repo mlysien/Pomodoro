@@ -29,7 +29,9 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/ico.ico"
+      "icons/icon.png",
+      "icons/icon.ico",
+      "icons/icon.icns"
     ],
     "category": "Productivity",
     "copyright": "Built with ❤️ by AI"
