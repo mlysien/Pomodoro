@@ -94,15 +94,31 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
 
+      - name: Create Windows zip
+        run: |
+          cd pomodoro-app-windows-latest
+          zip -r ../pomodoro-timer-windows.zip .
+          cd ..
+
+      - name: Create macOS zip
+        run: |
+          cd pomodoro-app-macos-latest
+          zip -r ../pomodoro-timer-macos.zip .
+          cd ..
+
+      - name: Create Linux zip
+        run: |
+          cd pomodoro-app-ubuntu-latest
+          zip -r ../pomodoro-timer-linux.zip .
+          cd ..
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            pomodoro-app-macos-latest/**/*.dmg
-            pomodoro-app-ubuntu-latest/**/*.AppImage
-            pomodoro-app-ubuntu-latest/**/*.deb
-            pomodoro-app-windows-latest/**/*.exe
-            pomodoro-app-windows-latest/**/*.msi
+            pomodoro-timer-windows.zip
+            pomodoro-timer-macos.zip
+            pomodoro-timer-linux.zip
           generate_release_notes: true
           draft: false
           prerelease: false 
