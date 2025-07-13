@@ -98,9 +98,11 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            pomodoro-app-macos-latest/**/*
-            pomodoro-app-ubuntu-latest/**/*
-            pomodoro-app-windows-latest/**/*
+            pomodoro-app-macos-latest/**/*.dmg
+            pomodoro-app-ubuntu-latest/**/*.AppImage
+            pomodoro-app-ubuntu-latest/**/*.deb
+            pomodoro-app-windows-latest/**/*.exe
+            pomodoro-app-windows-latest/**/*.msi
           generate_release_notes: true
           draft: false
           prerelease: false 
