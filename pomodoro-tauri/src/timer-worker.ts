@@ -1,7 +1,7 @@
 // Timer Worker - Handles countdown logic
-let timerDuration = 25; // 25 seconds
-let breakDuration = 5; // 5 seconds
-let longBreakDuration = 20; // 20 seconds
+let timerDuration = 25 * 60; // 25 minutes in seconds
+let breakDuration = 5 * 60; // 5 minutes in seconds
+let longBreakDuration = 20 * 60; // 20 minutes in seconds
 let timeLeft = timerDuration;
 let timer: number | null = null;
 let isPaused = true;

@@ -7,8 +7,8 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 ## Features
 
 ### 🎯 Core Functionality
-- **Pomodoro Technique**: 25-second work sessions with 5-second breaks
-- **Session Management**: Long breaks (20 seconds) after every 4th work session
+- **Pomodoro Technique**: 25-minute work sessions with 5-minute breaks
+- **Session Management**: Long breaks (20 minutes) after every 4th work session
 - **Automatic Switching**: Seamless transitions between work and break sessions
 - **Session Counter**: Track your work sessions with visual session numbers
 
@@ -68,9 +68,9 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 5. **Close App**: Click the X button or press **ESC**
 
 ### Session Pattern
-- **Work Session**: 25 seconds of focused work
-- **Short Break**: 5 seconds (after 1st, 2nd, and 3rd work sessions)
-- **Long Break**: 20 seconds (after the 4th work session)
+- **Work Session**: 25 minutes of focused work
+- **Short Break**: 5 minutes (after 1st, 2nd, and 3rd work sessions)
+- **Long Break**: 20 minutes (after the 4th work session)
 - **Cycle Repeats**: After 4 work sessions, the cycle starts over
 
 ## Technical Details
