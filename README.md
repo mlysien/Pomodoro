@@ -116,6 +116,61 @@ npm run tauri build
 npm run tauri preview
 ```
 
+## Releases
+
+### Creating a Release
+
+The app uses GitHub Actions for automated releases. To create a new release:
+
+#### Using the Release Script (Recommended)
+
+**On Windows:**
+```bash
+scripts\release.bat 1.0.0
+```
+
+**On Linux/macOS:**
+```bash
+chmod +x scripts/release.sh
+./scripts/release.sh 1.0.0
+```
+
+#### Manual Release Process
+
+1. **Update version numbers:**
+   ```bash
+   cd pomodoro-tauri
+   npm version 1.0.0 --no-git-tag-version
+   ```
+
+2. **Update Tauri config version** in `pomodoro-tauri/src-tauri/tauri.conf.json`
+
+3. **Create and push a tag:**
+   ```bash
+   git add .
+   git commit -m "Release version 1.0.0"
+   git tag -a "v1.0.0" -m "Release version 1.0.0"
+   git push origin v1.0.0
+   ```
+
+4. **GitHub Actions will automatically:**
+   - Build the app for Windows, macOS, and Linux
+   - Create a GitHub release with all artifacts
+   - Generate release notes
+
+### Release Artifacts
+
+Each release includes:
+- **Windows**: `.exe` and `.msi` installers
+- **macOS**: `.dmg` installer
+- **Linux**: `.AppImage` and `.deb` packages
+
+### Supported Platforms
+
+- ✅ Windows 10/11 (x64)
+- ✅ macOS 10.15+ (x64)
+- ✅ Linux (Ubuntu 18.04+, AppImage)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: pomodoro-tauri/package-lock.json
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'windows-latest' && 'x86_64-pc-windows-msvc' || matrix.platform == 'macos-latest' && 'x86_64-apple-darwin' || 'x86_64-unknown-linux-gnu' }}
+
+      - name: Install Rust target
+        run: rustup target add ${{ matrix.platform == 'windows-latest' && 'x86_64-pc-windows-msvc' || matrix.platform == 'macos-latest' && 'x86_64-apple-darwin' || 'x86_64-unknown-linux-gnu' }}
+
+      - name: Install Tauri CLI
+        run: npm install -g @tauri-apps/cli
+
+      - name: Install dependencies
+        run: |
+          cd pomodoro-tauri
+          npm ci
+
+      - name: Build application
+        run: |
+          cd pomodoro-tauri
+          npm run tauri build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pomodoro-app-${{ matrix.platform }}
+          path: |
+            pomodoro-tauri/src-tauri/target/release/bundle/
+            pomodoro-tauri/src-tauri/target/release/*.exe
+            pomodoro-tauri/src-tauri/target/release/*.dmg
+            pomodoro-tauri/src-tauri/target/release/*.AppImage
+            pomodoro-tauri/src-tauri/target/release/*.deb
+            pomodoro-tauri/src-tauri/target/release/*.msi
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            pomodoro-app-macos-latest/**/*
+            pomodoro-app-ubuntu-latest/**/*
+            pomodoro-app-windows-latest/**/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false 
