@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tauri App</title>
+    <script type="module" src="/src/main.ts" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  </head>
+
+  <body>
+    <div id="custom-titlebar">
+      <button id="close-btn" aria-label="Close" style="-webkit-app-region: no-drag;">✕</button>
+    </div>
+    <div class="mesh">
+      <div id="mesh-grid"></div>
+    </div>
+    <div class="panel">
+      <div id="timer-controls">
+        <button id="play-btn" aria-label="Play"><i class="fa-solid fa-play"></i></button>
+        <button id="stop-btn" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
+        <button id="skip-btn" aria-label="Skip"><i class="fa-solid fa-forward"></i></button>
+      </div>
+      <div id="timer-label">25:00</div>
+    </div>
+  </body>
+</html>
