@@ -1,2 +1,145 @@
-# Pomodoro
-Just Pomodoro timer... but fully delivered by AI
+# Pomodoro Timer App
+
+A beautiful and functional Pomodoro timer application built with Tauri (Rust + TypeScript) and created entirely by AI. This app helps you stay focused and productive using the Pomodoro Technique.
+
+![Pomodoro Timer App](https://via.placeholder.com/800x600/2c3e50/ffffff?text=Pomodoro+Timer+App)
+
+## Features
+
+### 🎯 Core Functionality
+- **Pomodoro Technique**: 25-second work sessions with 5-second breaks
+- **Session Management**: Long breaks (20 seconds) after every 4th work session
+- **Automatic Switching**: Seamless transitions between work and break sessions
+- **Session Counter**: Track your work sessions with visual session numbers
+
+### 🎨 Visual Experience
+- **Dynamic Mesh Visualization**: Beautiful animated grid that fills up during sessions
+- **Theme Switching**: Automatic color scheme changes between work and break modes
+- **Smooth Animations**: Fluid transitions and mesh clearing effects
+- **Custom Titlebar**: Clean, modern interface with close button
+
+### ⌨️ Keyboard Shortcuts
+- **ESC**: Exit the application
+- **Space**: Start/pause the timer
+- **R**: Reset the current session
+- **S**: Skip to the next session
+
+### ⚡ Performance
+- **Web Workers**: Separate threads for timer and mesh rendering
+- **Optimized Updates**: Throttled mesh updates for smooth performance
+- **Responsive Design**: Adapts to different window sizes
+
+## Installation & Usage
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Rust](https://rustup.rs/) (for Tauri development)
+- [Git](https://git-scm.com/)
+
+### Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Pomodoro/pomodoro-tauri
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run in development mode**
+   ```bash
+   npm run tauri dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run tauri build
+   ```
+
+### How to Use
+
+1. **Start a Work Session**: Click the play button or press **Space**
+2. **Pause/Resume**: Click the play button again or press **Space**
+3. **Reset**: Click the stop button or press **R**
+4. **Skip Session**: Click the skip button or press **S**
+5. **Close App**: Click the X button or press **ESC**
+
+### Session Pattern
+- **Work Session**: 25 seconds of focused work
+- **Short Break**: 5 seconds (after 1st, 2nd, and 3rd work sessions)
+- **Long Break**: 20 seconds (after the 4th work session)
+- **Cycle Repeats**: After 4 work sessions, the cycle starts over
+
+## Technical Details
+
+### Architecture
+- **Frontend**: TypeScript + Vite
+- **Backend**: Rust with Tauri
+- **Workers**: Web Workers for timer and mesh rendering
+- **Styling**: CSS with modern animations
+
+### Key Components
+- `main.ts`: Main application logic and UI interactions
+- `timer-worker.ts`: Timer countdown and session management
+- `mesh-worker.ts`: Mesh visualization calculations
+- `lib.rs`: Rust backend with exit command
+- `styles.css`: Modern styling with theme support
+
+## Development
+
+### Project Structure
+```
+pomodoro-tauri/
+├── src/
+│   ├── main.ts              # Main application logic
+│   ├── timer-worker.ts      # Timer Web Worker
+│   ├── mesh-worker.ts       # Mesh Web Worker
+│   └── styles.css           # Application styling
+├── src-tauri/
+│   └── src/
+│       └── lib.rs           # Rust backend
+└── package.json
+```
+
+### Building
+```bash
+# Development
+npm run tauri dev
+
+# Production build
+npm run tauri build
+
+# Preview production build
+npm run tauri preview
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## AI Creation
+
+This entire application was created by an AI assistant using Claude Sonnet 4. The AI designed, implemented, and optimized all aspects of the application including:
+
+- **Frontend Development**: TypeScript, CSS, and Web Workers
+- **Backend Development**: Rust with Tauri integration
+- **UI/UX Design**: Modern interface with animations and themes
+- **Performance Optimization**: Efficient rendering and state management
+- **Feature Implementation**: Complete Pomodoro functionality
+
+The AI handled all aspects of development from initial concept to final implementation, demonstrating the capabilities of AI-assisted software development.
+
+## Contributing
+
+While this app was created by AI, contributions are welcome! Feel free to submit issues, feature requests, or pull requests.
+
+## Support
+
+If you encounter any issues or have questions about the application, please open an issue in the repository.
+
+---
+
+**Built with ❤️ by AI** 🤖
