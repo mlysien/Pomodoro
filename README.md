@@ -18,6 +18,12 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 - **Smooth Animations**: Fluid transitions and mesh clearing effects
 - **Custom Titlebar**: Clean, modern interface with close button
 
+### 🔊 Sound Features
+- **Tick Sound**: A subtle ticking sound plays every second during work and break sessions to help you stay aware of the timer.
+- **Break Sound**: A gentle chime plays at the start and end of each short break, and at the end of a long break.
+- **Long Break Sound**: A distinct sound plays at the start of each long break session.
+- **Sound Toggle**: Instantly mute or unmute all sounds using the sound toggle button in the timer controls.
+
 ### ⌨️ Keyboard Shortcuts
 - **ESC**: Exit the application
 - **Space**: Start/pause the timer
