@@ -42,12 +42,8 @@ function calculateMeshUpdate(percent: number, isBreak: boolean) {
       const idx = unfilled[randomIndex];
       unfilled.splice(randomIndex, 1); // Remove from unfilled list
       
-      let color;
-      if (isBreak) {
-        color = getChillColor(idx);
-      } else {
-        color = `hsl(${Math.floor(Math.random() * 360)}, 80%, 60%)`;
-      }
+      // Always use the work session color for all sessions
+      let color = `hsl(${Math.floor(Math.random() * 360)}, 80%, 60%)`;
       meshFilledIndices.add(idx);
       meshFilledColors.set(idx, color);
       updates.push({ index: idx, color: color });

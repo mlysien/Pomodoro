@@ -21,8 +21,12 @@
         <button id="play-btn" aria-label="Play"><i class="fa-solid fa-play"></i></button>
         <button id="stop-btn" aria-label="Reset"><i class="fa-solid fa-rotate-right"></i></button>
         <button id="skip-btn" aria-label="Skip"><i class="fa-solid fa-forward"></i></button>
+        <button id="sound-toggle-btn" aria-label="Toggle Sound"><i class="fa-solid fa-volume-up"></i></button>
       </div>
       <div id="timer-label">25:00</div>
     </div>
+    <audio id="tick-audio" src="/src-tauri/sounds/tick.mp3" preload="auto"></audio>
+    <audio id="break-audio" src="/src-tauri/sounds/break.mp3" preload="auto"></audio>
+    <audio id="long-break-audio" src="/src-tauri/sounds/long_break.mp3" preload="auto"></audio>
   </body>
 </html>
