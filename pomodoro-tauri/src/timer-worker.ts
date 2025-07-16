@@ -32,7 +32,9 @@ function startTimer() {
         timeLeft: timeLeft,
         formattedTime: formatTime(timeLeft),
         percent: (getCurrentSessionDuration() - timeLeft) / getCurrentSessionDuration(),
-        isBreak: isBreak
+        isBreak: isBreak,
+        sessionCount: sessionCount,
+        isLongBreak: isCurrentLongBreak()
       });
     } else {
       pauseTimer();
@@ -42,7 +44,9 @@ function startTimer() {
         timeLeft: 0,
         formattedTime: formatTime(0),
         percent: 1.0,
-        isBreak: isBreak
+        isBreak: isBreak,
+        sessionCount: sessionCount,
+        isLongBreak: isCurrentLongBreak()
       });
       // Automatically switch between work and break
       setTimeout(() => {
@@ -60,7 +64,9 @@ function startTimer() {
           isBreak: isBreak,
           timeLeft: timeLeft,
           formattedTime: formatTime(timeLeft),
-          percent: 0
+          percent: 0,
+          sessionCount: sessionCount,
+          isLongBreak: isCurrentLongBreak()
         });
         startTimer();
       }, 1000);
@@ -86,7 +92,9 @@ function stopTimer() {
     type: 'timerReset',
     timeLeft: timeLeft,
     formattedTime: formatTime(timeLeft),
-    percent: 0
+    percent: 0,
+    sessionCount: sessionCount,
+    isLongBreak: isCurrentLongBreak()
   });
 }
 
@@ -107,6 +115,10 @@ function getCurrentSessionDuration() {
     return sessionCount % 4 === 0 ? longBreakDuration : breakDuration;
   }
   return timerDuration;
+}
+
+function isCurrentLongBreak() {
+  return isBreak && (sessionCount % 4 === 0);
 }
 
 // Handle messages from main thread
@@ -132,7 +144,9 @@ self.addEventListener('message', (event) => {
         timeLeft: timeLeft,
         formattedTime: formatTime(timeLeft),
         percent: (timerDuration - timeLeft) / timerDuration,
-        isPaused: isPaused
+        isPaused: isPaused,
+        sessionCount: sessionCount,
+        isLongBreak: isCurrentLongBreak()
       });
       break;
     case 'skip':
@@ -144,7 +158,9 @@ self.addEventListener('message', (event) => {
         timeLeft: 0,
         formattedTime: formatTime(0),
         percent: 1.0,
-        isBreak: isBreak
+        isBreak: isBreak,
+        sessionCount: sessionCount,
+        isLongBreak: isCurrentLongBreak()
       });
       setTimeout(() => {
         isBreak = !isBreak;
@@ -161,7 +177,9 @@ self.addEventListener('message', (event) => {
           isBreak: isBreak,
           timeLeft: timeLeft,
           formattedTime: formatTime(timeLeft),
-          percent: 0
+          percent: 0,
+          sessionCount: sessionCount,
+          isLongBreak: isCurrentLongBreak()
         });
         startTimer();
       }, 1000);
@@ -175,5 +193,7 @@ self.postMessage({
   timeLeft: timeLeft,
   formattedTime: formatTime(timeLeft),
   percent: 0,
-  isPaused: isPaused
+  isPaused: isPaused,
+  sessionCount: sessionCount,
+  isLongBreak: isCurrentLongBreak()
 }); 

@@ -60,6 +60,20 @@ function updateSessionLabel() {
   updateTimerDisplay(document.getElementById("timer-value")?.textContent || "00:00");
 }
 
+function updateSessionTypeLabel(timeLeft: number, isBreak: boolean, sessionCount?: number, isLongBreak?: boolean) {
+  const label = document.getElementById("session-type-label");
+  if (!label) return;
+  let text = "";
+  if (!isBreak) {
+    text = "Focus Session";
+  } else if (isLongBreak) {
+    text = "Long Break";
+  } else {
+    text = "Short Break";
+  }
+  label.textContent = text.toUpperCase();
+}
+
 // Throttle function for resize events
 function throttle(func: Function, limit: number) {
   let inThrottle: boolean;
@@ -116,6 +130,8 @@ function initializeWorkers() {
             });
           }
         }
+        // Call updateSessionTypeLabel on timerUpdate
+        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
         break;
       case 'timerComplete':
         updateTimerDisplay(data.formattedTime);
@@ -136,6 +152,8 @@ function initializeWorkers() {
             (window as any).lastBreakWasLong = false;
           }
         }
+        // Call updateSessionTypeLabel on timerComplete
+        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
         break;
       case 'timerReset':
         updateTimerDisplay(data.formattedTime);
@@ -143,6 +161,8 @@ function initializeWorkers() {
         if (meshWorker) {
           meshWorker.postMessage({ type: 'clearMesh' });
         }
+        // Call updateSessionTypeLabel on timerReset
+        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
         break;
       case 'timerState':
         updatePlayPauseIcon(data.isPaused);
@@ -157,6 +177,8 @@ function initializeWorkers() {
         } else {
           pauseTimer();
         }
+        // Call updateSessionTypeLabel on currentState
+        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
         break;
       case 'sessionSwitch':
         // Only increment session number when switching from work to break
@@ -195,6 +217,8 @@ function initializeWorkers() {
             data: { percent: 0, isBreak: data.isBreak }
           });
         }
+        // Call updateSessionTypeLabel on sessionSwitch
+        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
         break;
     }
   };
