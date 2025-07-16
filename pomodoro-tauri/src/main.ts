@@ -60,7 +60,7 @@ function updateSessionLabel() {
   updateTimerDisplay(document.getElementById("timer-value")?.textContent || "00:00");
 }
 
-function updateSessionTypeLabel(timeLeft: number, isBreak: boolean, sessionCount?: number, isLongBreak?: boolean) {
+function updateSessionTypeLabel(isBreak: boolean, isLongBreak?: boolean) {
   const label = document.getElementById("session-type-label");
   if (!label) return;
   let text = "";
@@ -131,7 +131,7 @@ function initializeWorkers() {
           }
         }
         // Call updateSessionTypeLabel on timerUpdate
-        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
+        updateSessionTypeLabel(data.isBreak, data.isLongBreak);
         break;
       case 'timerComplete':
         updateTimerDisplay(data.formattedTime);
@@ -153,7 +153,7 @@ function initializeWorkers() {
           }
         }
         // Call updateSessionTypeLabel on timerComplete
-        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
+        updateSessionTypeLabel(data.isBreak, data.isLongBreak);
         break;
       case 'timerReset':
         updateTimerDisplay(data.formattedTime);
@@ -162,7 +162,7 @@ function initializeWorkers() {
           meshWorker.postMessage({ type: 'clearMesh' });
         }
         // Call updateSessionTypeLabel on timerReset
-        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
+        updateSessionTypeLabel(data.isBreak, data.isLongBreak);
         break;
       case 'timerState':
         updatePlayPauseIcon(data.isPaused);
@@ -178,7 +178,7 @@ function initializeWorkers() {
           pauseTimer();
         }
         // Call updateSessionTypeLabel on currentState
-        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
+        updateSessionTypeLabel(data.isBreak, data.isLongBreak);
         break;
       case 'sessionSwitch':
         // Only increment session number when switching from work to break
@@ -218,7 +218,7 @@ function initializeWorkers() {
           });
         }
         // Call updateSessionTypeLabel on sessionSwitch
-        updateSessionTypeLabel(data.timeLeft, data.isBreak, data.sessionCount, data.isLongBreak);
+        updateSessionTypeLabel(data.isBreak, data.isLongBreak);
         break;
     }
   };
