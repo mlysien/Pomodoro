@@ -18,11 +18,19 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 - **Smooth Animations**: Fluid transitions and mesh clearing effects
 - **Custom Titlebar**: Clean, modern interface with close button
 
+### ⚙️ Settings & Customization
+- **Settings Menu**: Full-screen settings panel accessible via the gear icon in the titlebar.
+- **Timer Duration Settings**: Customize work, break, and long break durations.
+- **Sound Settings**: Separate toggles for work sounds and break sounds.
+- **Modern UI**: Blurred dark background with smooth animations and no scrollbars.
+- **Responsive Design**: Settings menu adapts to different screen sizes.
+
 ### 🔊 Sound Features
-- **Tick Sound**: A subtle ticking sound plays every second during work and break sessions to help you stay aware of the timer.
-- **Break Sound**: A gentle chime plays at the start and end of each short break, and at the end of a long break.
+- **Tick Sound**: A subtle ticking sound plays every second during work sessions (when work sounds enabled) and break sessions (when break sounds enabled).
+- **Break Sound**: A gentle chime plays at the start of each break session.
 - **Long Break Sound**: A distinct sound plays at the start of each long break session.
 - **Sound Toggle**: Instantly mute or unmute all sounds using the sound toggle button in the timer controls.
+- **Independent Control**: Separate settings for work sounds and break sounds.
 
 ### ⌨️ Keyboard Shortcuts
 - **ESC**: Exit the application
@@ -71,7 +79,8 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 2. **Pause/Resume**: Click the play button again or press **Space**
 3. **Reset**: Click the stop button or press **R**
 4. **Skip Session**: Click the skip button or press **S**
-5. **Close App**: Click the X button or press **ESC**
+5. **Open Settings**: Click the gear icon in the titlebar
+6. **Close App**: Click the X button or press **ESC**
 
 ### Session Pattern
 - **Work Session**: 25 minutes of focused work
@@ -121,6 +130,23 @@ npm run tauri build
 # Preview production build
 npm run tauri preview
 ```
+
+## Changelog
+
+### Version 1.3.0 (Latest)
+- ✨ **New Settings Menu**: Full-screen settings panel with gear icon in titlebar
+- ⚙️ **Customizable Timer Durations**: Adjust work, break, and long break durations
+- 🔊 **Enhanced Sound Control**: Separate toggles for work sounds and break sounds
+- 🎨 **Modern UI**: Blurred dark background with smooth animations
+- 🔧 **Improved Sound Logic**: Tick sounds now play during breaks when break sounds are enabled
+- 🎯 **Better UX**: No scrollbars in settings menu, responsive design
+
+### Version 1.0.0
+- 🎯 **Core Pomodoro Functionality**: 25-minute work sessions with 5-minute breaks
+- 🎨 **Dynamic Mesh Visualization**: Beautiful animated grid
+- 🔊 **Sound Features**: Tick sounds, break sounds, and long break sounds
+- ⌨️ **Keyboard Shortcuts**: Full keyboard navigation support
+- ⚡ **Performance**: Web Workers for smooth operation
 
 ## Releases
 

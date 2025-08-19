@@ -17,7 +17,8 @@ let sessionNumber = 1;
 let tickAudio: HTMLAudioElement | null = null;
 let breakAudio: HTMLAudioElement | null = null;
 let longBreakAudio: HTMLAudioElement | null = null;
-let isSoundMuted = false;
+let isWorkSoundEnabled = true;
+let isBreakSoundEnabled = true;
 
 function updateTimerDisplay(formattedTime: string) {
   const timerLabel = document.getElementById("timer-label");
@@ -95,9 +96,26 @@ function initializeWorkers() {
   let lastUpdateTime = 0;
   let lastPercent = 0;
   
-  tickAudio = document.getElementById('tick-audio') as HTMLAudioElement;
-  breakAudio = document.getElementById('break-audio') as HTMLAudioElement;
-  longBreakAudio = document.getElementById('long-break-audio') as HTMLAudioElement;
+     tickAudio = document.getElementById('tick-audio') as HTMLAudioElement;
+   breakAudio = document.getElementById('break-audio') as HTMLAudioElement;
+   longBreakAudio = document.getElementById('long-break-audio') as HTMLAudioElement;
+   
+   // Debug audio elements
+   console.log('Audio elements loaded:', {
+     tickAudio: !!tickAudio,
+     breakAudio: !!breakAudio,
+     longBreakAudio: !!longBreakAudio
+   });
+   
+   // Test audio loading
+   if (breakAudio) {
+     breakAudio.addEventListener('canplaythrough', () => {
+       console.log('Break audio loaded successfully');
+     });
+     breakAudio.addEventListener('error', (e) => {
+       console.error('Break audio failed to load:', e);
+     });
+   }
 
   timerWorker.onmessage = (event) => {
     const { type, ...data } = event.data;
@@ -105,8 +123,9 @@ function initializeWorkers() {
     switch (type) {
       case 'timerUpdate':
         updateTimerDisplay(data.formattedTime);
-        // Play tick sound every full second
-        if (tickAudio && data.timeLeft !== undefined) {
+                 // Play tick sound every full second (during work sessions when work sounds enabled, or during breaks when break sounds enabled)
+         if (tickAudio && data.timeLeft !== undefined && 
+             ((!data.isBreak && isWorkSoundEnabled) || (data.isBreak && isBreakSoundEnabled))) {
           const currentSecond = Math.ceil(data.timeLeft);
           if (typeof (window as any).lastTickSecond === 'undefined') {
             (window as any).lastTickSecond = currentSecond;
@@ -136,7 +155,7 @@ function initializeWorkers() {
       case 'timerComplete':
         updateTimerDisplay(data.formattedTime);
         // Play break sound at the end of a short break
-        if (breakAudio && data.isBreak && data.timeLeft === 0) {
+        if (breakAudio && data.isBreak && data.timeLeft === 0 && isBreakSoundEnabled) {
           // Short break is 5 minutes (300 seconds)
           if (data.formattedTime === '00:00' && data.percent === 1.0) {
             breakAudio.currentTime = 0;
@@ -144,7 +163,7 @@ function initializeWorkers() {
           }
         }
         // Play break sound at the end of a long break
-        if (breakAudio && data.isBreak && data.timeLeft === 0) {
+        if (breakAudio && data.isBreak && data.timeLeft === 0 && isBreakSoundEnabled) {
           // Long break is 20 minutes (1200 seconds)
           if (data.formattedTime === '00:00' && data.percent === 1.0 && (window as any).lastBreakWasLong) {
             breakAudio.currentTime = 0;
@@ -180,46 +199,84 @@ function initializeWorkers() {
         // Call updateSessionTypeLabel on currentState
         updateSessionTypeLabel(data.isBreak, data.isLongBreak);
         break;
-      case 'sessionSwitch':
-        // Only increment session number when switching from work to break
-        if (!data.isBreak) {
-          sessionNumber++;
-        }
-        setBreakMode(data.isBreak);
-        updateTimerDisplay(data.formattedTime);
-        updateSessionLabel();
-        // Play break sound only for short breaks at the start
-        if (breakAudio && data.isBreak) {
-          // Short break is when timeLeft equals 5*60 (300 seconds)
-          if (data.timeLeft === 300) {
-            breakAudio.currentTime = 0;
-            breakAudio.play();
-            (window as any).lastBreakWasLong = false;
-          }
-        }
-        // Play long break sound at the start of a long break
-        if (longBreakAudio && data.isBreak) {
-          // Long break is when timeLeft equals 20*60 (1200 seconds)
-          if (data.timeLeft === 1200) {
-            longBreakAudio.currentTime = 0;
-            longBreakAudio.play();
-            (window as any).lastBreakWasLong = true;
-          }
-        }
-        // Reset timing variables to ensure mesh updates start properly
-        lastUpdateTime = 0;
-        lastPercent = 0;
-        // Clear mesh and start new session
-        if (meshWorker) {
-          meshWorker.postMessage({ type: 'clearMesh' });
-          meshWorker.postMessage({
-            type: 'updateMesh',
-            data: { percent: 0, isBreak: data.isBreak }
-          });
-        }
-        // Call updateSessionTypeLabel on sessionSwitch
-        updateSessionTypeLabel(data.isBreak, data.isLongBreak);
-        break;
+                                         case 'sessionSwitch':
+         console.log('Session switch:', { 
+           isBreak: data.isBreak, 
+           isLongBreak: data.isLongBreak, 
+           isBreakSoundEnabled, 
+           breakAudio: !!breakAudio 
+         });
+         // Only increment session number when switching from work to break
+         if (!data.isBreak) {
+           sessionNumber++;
+         }
+         setBreakMode(data.isBreak);
+         updateTimerDisplay(data.formattedTime);
+         updateSessionLabel();
+         // Play break sound at the start of breaks
+         if (breakAudio && data.isBreak && isBreakSoundEnabled) {
+           console.log('Break sound conditions met:', {
+             breakAudio: !!breakAudio,
+             isBreak: data.isBreak,
+             isBreakSoundEnabled,
+             isLongBreak: data.isLongBreak
+           });
+           
+           // Play short break sound for short breaks
+           if (!data.isLongBreak) {
+             console.log('Playing short break sound');
+             breakAudio.currentTime = 0;
+             
+             // Force audio to play with user interaction
+             const playPromise = breakAudio.play();
+             if (playPromise !== undefined) {
+               playPromise
+                 .then(() => {
+                   console.log('Break sound played successfully');
+                 })
+                 .catch(e => {
+                   console.error('Error playing break sound:', e);
+                   // Try to play again after a short delay
+                   setTimeout(() => {
+                     breakAudio.currentTime = 0;
+                     breakAudio.play().catch(e2 => console.error('Retry failed:', e2));
+                   }, 100);
+                 });
+             }
+             
+             (window as any).lastBreakWasLong = false;
+           }
+         }
+         // Play long break sound at the start of a long break
+         if (longBreakAudio && data.isBreak && isBreakSoundEnabled) {
+           // Play long break sound for long breaks
+           if (data.isLongBreak) {
+             console.log('Playing long break sound');
+             longBreakAudio.currentTime = 0;
+             longBreakAudio.play().catch(e => console.error('Error playing long break sound:', e));
+             (window as any).lastBreakWasLong = true;
+           }
+         }
+         // Reset timing variables to ensure mesh updates start properly
+         lastUpdateTime = 0;
+         lastPercent = 0;
+         // Clear mesh and start new session
+         if (meshWorker) {
+           meshWorker.postMessage({ type: 'clearMesh' });
+           meshWorker.postMessage({
+             type: 'updateMesh',
+             data: { percent: 0, isBreak: data.isBreak }
+           });
+         }
+         // Call updateSessionTypeLabel on sessionSwitch
+         updateSessionTypeLabel(data.isBreak, data.isLongBreak);
+         break;
+       case 'durations':
+         // Load current durations into settings form
+         workDurationInput.value = data.workDuration.toString();
+         breakDurationInput.value = data.breakDuration.toString();
+         longBreakDurationInput.value = data.longBreakDuration.toString();
+         break;
     }
   };
 
@@ -291,6 +348,80 @@ window.addEventListener("DOMContentLoaded", () => {
     stopTimer();
   });
 
+  const settingsBtn = document.getElementById("settings-btn");
+  const settingsMenu = document.getElementById("settings-menu");
+  const closeSettingsBtn = document.getElementById("close-settings-btn");
+  const saveSettingsBtn = document.getElementById("save-settings-btn");
+  const cancelSettingsBtn = document.getElementById("cancel-settings-btn");
+
+  // Settings form elements
+  const workDurationInput = document.getElementById("work-duration") as HTMLInputElement;
+  const breakDurationInput = document.getElementById("break-duration") as HTMLInputElement;
+  const longBreakDurationInput = document.getElementById("long-break-duration") as HTMLInputElement;
+  const workSoundEnabledInput = document.getElementById("work-sound-enabled") as HTMLInputElement;
+  const breakSoundEnabledInput = document.getElementById("break-sound-enabled") as HTMLInputElement;
+
+  function showSettingsMenu() {
+    if (settingsMenu) {
+      // Get current settings from timer worker
+      if (timerWorker) {
+        timerWorker.postMessage({ type: 'getDurations' });
+      }
+      
+      // Load current sound settings
+      workSoundEnabledInput.checked = isWorkSoundEnabled;
+      breakSoundEnabledInput.checked = isBreakSoundEnabled;
+      
+      settingsMenu.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function hideSettingsMenu() {
+    if (settingsMenu) {
+      settingsMenu.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+  }
+
+  function saveSettings() {
+    const workDuration = parseInt(workDurationInput.value) * 60; // Convert to seconds
+    const breakDuration = parseInt(breakDurationInput.value) * 60;
+    const longBreakDuration = parseInt(longBreakDurationInput.value) * 60;
+    const workSoundEnabled = workSoundEnabledInput.checked;
+    const breakSoundEnabled = breakSoundEnabledInput.checked;
+
+    // Update timer worker with new durations
+    if (timerWorker) {
+      timerWorker.postMessage({ 
+        type: 'setDurations', 
+        data: { 
+          workDuration, 
+          breakDuration, 
+          longBreakDuration 
+        } 
+      });
+    }
+
+    // Update sound settings
+    isWorkSoundEnabled = workSoundEnabled;
+    isBreakSoundEnabled = breakSoundEnabled;
+
+    hideSettingsMenu();
+  }
+
+  settingsBtn?.addEventListener("click", showSettingsMenu);
+  closeSettingsBtn?.addEventListener("click", hideSettingsMenu);
+  saveSettingsBtn?.addEventListener("click", saveSettings);
+  cancelSettingsBtn?.addEventListener("click", hideSettingsMenu);
+
+  // Close settings menu when clicking outside
+  settingsMenu?.addEventListener("click", (event) => {
+    if (event.target === settingsMenu) {
+      hideSettingsMenu();
+    }
+  });
+
   const closeBtn = document.getElementById("close-btn");
   closeBtn?.addEventListener("click", () => {
     try {
@@ -309,24 +440,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const soundToggleBtn = document.getElementById("sound-toggle-btn") as HTMLButtonElement;
   const soundToggleIcon = soundToggleBtn?.querySelector("i");
+  
   function updateSoundIcon() {
     if (soundToggleIcon) {
-      soundToggleIcon.className = isSoundMuted ? "fa-solid fa-volume-mute" : "fa-solid fa-volume-up";
+      const hasAnySoundEnabled = isWorkSoundEnabled || isBreakSoundEnabled;
+      soundToggleIcon.className = hasAnySoundEnabled ? "fa-solid fa-volume-up" : "fa-solid fa-volume-mute";
     }
   }
-  function setAllAudioMuted(muted: boolean) {
-    if (tickAudio) tickAudio.muted = muted;
-    if (breakAudio) breakAudio.muted = muted;
-    if (longBreakAudio) longBreakAudio.muted = muted;
-  }
+  
   soundToggleBtn?.addEventListener("click", () => {
-    isSoundMuted = !isSoundMuted;
-    setAllAudioMuted(isSoundMuted);
+    // Toggle both work and break sounds together
+    isWorkSoundEnabled = !isWorkSoundEnabled;
+    isBreakSoundEnabled = !isBreakSoundEnabled;
     updateSoundIcon();
   });
-  // Set initial state
-  setAllAudioMuted(isSoundMuted);
-  updateSoundIcon();
+  
+     // Set initial state
+   updateSoundIcon();
 
   // Mesh grid population
   const meshGrid = document.getElementById("mesh-grid");
@@ -399,3 +529,4 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+

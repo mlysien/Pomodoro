@@ -177,6 +177,10 @@ button {
   pointer-events: auto;
   z-index: 201;
 }
+#custom-titlebar #settings-btn {
+  pointer-events: auto;
+  z-index: 201;
+}
 #close-btn {
   background-color: transparent !important;
   background: transparent !important;
@@ -202,6 +206,38 @@ button {
 #close-btn:hover,
 #close-btn:focus,
 #close-btn:active {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #fff;
+}
+
+#settings-btn {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #fff;
+  margin: 0;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 8px;
+  right: 44px;
+  z-index: 202;
+  pointer-events: auto;
+  backdrop-filter: none !important;
+}
+#settings-btn:hover,
+#settings-btn:focus,
+#settings-btn:active {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -362,7 +398,7 @@ body, .mesh, .panel {
   -webkit-app-region: drag;
 }
 
-button, input, #timer-controls, #close-btn, #greet-input, #play-btn, #stop-btn, #skip-btn {
+button, input, #timer-controls, #close-btn, #greet-input, #play-btn, #stop-btn, #skip-btn, #settings-menu, #settings-menu * {
   -webkit-app-region: no-drag;
 }
 
@@ -375,4 +411,179 @@ button, input, #timer-controls, #close-btn, #greet-input, #play-btn, #stop-btn, 
   pointer-events: none;
   z-index: 100;
   background: linear-gradient(to bottom, rgba(52,73,94,0.85) 0%, rgba(52,73,94,0.3) 60%, rgba(52,73,94,0) 100%);
+}
+
+/* Settings Menu Styles */
+.settings-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.settings-menu.active {
+  display: flex;
+  opacity: 1;
+}
+
+.settings-content {
+  background: rgba(52, 73, 94, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(168, 216, 234, 0.2);
+  /* Hide scrollbar but keep scrolling functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.settings-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(168, 216, 234, 0.3);
+}
+
+.settings-header h2 {
+  color: #e8f5e8;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.close-settings-btn {
+  background: transparent;
+  border: none;
+  color: #e8f5e8;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-settings-btn:hover {
+  background: rgba(168, 216, 234, 0.1);
+  color: #a8d8ea;
+}
+
+.settings-body {
+  color: #e8f5e8;
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+}
+
+.settings-section h3 {
+  color: #a8d8ea;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(168, 216, 234, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(168, 216, 234, 0.1);
+}
+
+.setting-item label {
+  font-weight: 500;
+  color: #e8f5e8;
+  flex: 1;
+}
+
+.setting-item input[type="number"] {
+  background: rgba(52, 73, 94, 0.8);
+  border: 1px solid rgba(168, 216, 234, 0.3);
+  color: #e8f5e8;
+  padding: 0.5rem;
+  border-radius: 6px;
+  width: 80px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.setting-item input[type="number"]:focus {
+  border-color: #a8d8ea;
+  box-shadow: 0 0 10px rgba(168, 216, 234, 0.3);
+  outline: none;
+}
+
+.setting-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #a8d8ea;
+  cursor: pointer;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(168, 216, 234, 0.3);
+}
+
+.save-settings-btn, .cancel-settings-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.save-settings-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #e8f5e8;
+}
+
+.save-settings-btn:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.cancel-settings-btn {
+  background: rgba(168, 216, 234, 0.1);
+  color: #e8f5e8;
+  border: 1px solid rgba(168, 216, 234, 0.3);
+}
+
+.cancel-settings-btn:hover {
+  background: rgba(168, 216, 234, 0.2);
+  border-color: #a8d8ea;
 }

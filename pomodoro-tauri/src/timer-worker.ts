@@ -138,6 +138,23 @@ self.addEventListener('message', (event) => {
     case 'setDuration':
       setDuration(data.duration);
       break;
+    case 'setDurations':
+      timerDuration = data.workDuration;
+      breakDuration = data.breakDuration;
+      longBreakDuration = data.longBreakDuration;
+      // Reset timer with new duration if not currently running
+      if (!timer) {
+        timeLeft = timerDuration;
+        self.postMessage({
+          type: 'timerReset',
+          timeLeft: timeLeft,
+          formattedTime: formatTime(timeLeft),
+          percent: 0,
+          sessionCount: sessionCount,
+          isLongBreak: isCurrentLongBreak()
+        });
+      }
+      break;
     case 'getState':
       self.postMessage({
         type: 'currentState',
@@ -147,6 +164,14 @@ self.addEventListener('message', (event) => {
         isPaused: isPaused,
         sessionCount: sessionCount,
         isLongBreak: isCurrentLongBreak()
+      });
+      break;
+    case 'getDurations':
+      self.postMessage({
+        type: 'durations',
+        workDuration: timerDuration / 60,
+        breakDuration: breakDuration / 60,
+        longBreakDuration: longBreakDuration / 60
       });
       break;
     case 'skip':

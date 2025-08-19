@@ -11,6 +11,7 @@
 
   <body>
     <div id="custom-titlebar">
+      <button id="settings-btn" aria-label="Settings" style="-webkit-app-region: no-drag;"><i class="fa-solid fa-gear"></i></button>
       <button id="close-btn" aria-label="Close" style="-webkit-app-region: no-drag;">✕</button>
     </div>
     <div class="mesh" style="position: relative;">
@@ -30,5 +31,49 @@
     <audio id="tick-audio" src="/src-tauri/sounds/tick.mp3" preload="auto"></audio>
     <audio id="break-audio" src="/src-tauri/sounds/break.mp3" preload="auto"></audio>
     <audio id="long-break-audio" src="/src-tauri/sounds/long_break.mp3" preload="auto"></audio>
+    
+    <!-- Settings Menu -->
+    <div id="settings-menu" class="settings-menu">
+      <div class="settings-content">
+        <div class="settings-header">
+          <h2>Settings</h2>
+          <button id="close-settings-btn" class="close-settings-btn">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+        <div class="settings-body">
+          <div class="settings-section">
+            <h3>Timer Settings</h3>
+            <div class="setting-item">
+              <label for="work-duration">Work Duration (minutes):</label>
+              <input type="number" id="work-duration" min="1" max="120" value="25">
+            </div>
+            <div class="setting-item">
+              <label for="break-duration">Break Duration (minutes):</label>
+              <input type="number" id="break-duration" min="1" max="60" value="5">
+            </div>
+            <div class="setting-item">
+              <label for="long-break-duration">Long Break Duration (minutes):</label>
+              <input type="number" id="long-break-duration" min="1" max="120" value="15">
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3>Sound Settings</h3>
+            <div class="setting-item">
+              <label for="work-sound-enabled">Enable sounds for work:</label>
+              <input type="checkbox" id="work-sound-enabled" checked>
+            </div>
+            <div class="setting-item">
+              <label for="break-sound-enabled">Enable sounds for break:</label>
+              <input type="checkbox" id="break-sound-enabled" checked>
+            </div>
+          </div>
+          <div class="settings-actions">
+            <button id="save-settings-btn" class="save-settings-btn">Save Settings</button>
+            <button id="cancel-settings-btn" class="cancel-settings-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
