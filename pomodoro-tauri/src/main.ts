@@ -20,6 +20,13 @@ let longBreakAudio: HTMLAudioElement | null = null;
 let isWorkSoundEnabled = true;
 let isBreakSoundEnabled = true;
 
+// Settings form elements (module scope for access in worker handlers)
+let workDurationInput: HTMLInputElement | null = null;
+let breakDurationInput: HTMLInputElement | null = null;
+let longBreakDurationInput: HTMLInputElement | null = null;
+let workSoundEnabledInput: HTMLInputElement | null = null;
+let breakSoundEnabledInput: HTMLInputElement | null = null;
+
 function updateTimerDisplay(formattedTime: string) {
   const timerLabel = document.getElementById("timer-label");
   if (timerLabel) {
@@ -225,10 +232,11 @@ function initializeWorkers() {
            // Play short break sound for short breaks
            if (!data.isLongBreak) {
              console.log('Playing short break sound');
-             breakAudio.currentTime = 0;
+             const audio = breakAudio as HTMLAudioElement;
+             audio.currentTime = 0;
              
              // Force audio to play with user interaction
-             const playPromise = breakAudio.play();
+             const playPromise = audio.play();
              if (playPromise !== undefined) {
                playPromise
                  .then(() => {
@@ -238,8 +246,8 @@ function initializeWorkers() {
                    console.error('Error playing break sound:', e);
                    // Try to play again after a short delay
                    setTimeout(() => {
-                     breakAudio.currentTime = 0;
-                     breakAudio.play().catch(e2 => console.error('Retry failed:', e2));
+                     audio.currentTime = 0;
+                     audio.play().catch(e2 => console.error('Retry failed:', e2));
                    }, 100);
                  });
              }
@@ -272,10 +280,10 @@ function initializeWorkers() {
          updateSessionTypeLabel(data.isBreak, data.isLongBreak);
          break;
        case 'durations':
-         // Load current durations into settings form
-         workDurationInput.value = data.workDuration.toString();
-         breakDurationInput.value = data.breakDuration.toString();
-         longBreakDurationInput.value = data.longBreakDuration.toString();
+         // Load current durations into settings form (guard for nulls)
+         if (workDurationInput) workDurationInput.value = data.workDuration.toString();
+         if (breakDurationInput) breakDurationInput.value = data.breakDuration.toString();
+         if (longBreakDurationInput) longBreakDurationInput.value = data.longBreakDuration.toString();
          break;
     }
   };
@@ -355,11 +363,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const cancelSettingsBtn = document.getElementById("cancel-settings-btn");
 
   // Settings form elements
-  const workDurationInput = document.getElementById("work-duration") as HTMLInputElement;
-  const breakDurationInput = document.getElementById("break-duration") as HTMLInputElement;
-  const longBreakDurationInput = document.getElementById("long-break-duration") as HTMLInputElement;
-  const workSoundEnabledInput = document.getElementById("work-sound-enabled") as HTMLInputElement;
-  const breakSoundEnabledInput = document.getElementById("break-sound-enabled") as HTMLInputElement;
+  workDurationInput = document.getElementById("work-duration") as HTMLInputElement;
+  breakDurationInput = document.getElementById("break-duration") as HTMLInputElement;
+  longBreakDurationInput = document.getElementById("long-break-duration") as HTMLInputElement;
+  workSoundEnabledInput = document.getElementById("work-sound-enabled") as HTMLInputElement;
+  breakSoundEnabledInput = document.getElementById("break-sound-enabled") as HTMLInputElement;
 
   function showSettingsMenu() {
     if (settingsMenu) {
@@ -369,8 +377,8 @@ window.addEventListener("DOMContentLoaded", () => {
       }
       
       // Load current sound settings
-      workSoundEnabledInput.checked = isWorkSoundEnabled;
-      breakSoundEnabledInput.checked = isBreakSoundEnabled;
+      if (workSoundEnabledInput) workSoundEnabledInput.checked = isWorkSoundEnabled;
+      if (breakSoundEnabledInput) breakSoundEnabledInput.checked = isBreakSoundEnabled;
       
       settingsMenu.classList.add("active");
       document.body.style.overflow = "hidden";
@@ -385,11 +393,11 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveSettings() {
-    const workDuration = parseInt(workDurationInput.value) * 60; // Convert to seconds
-    const breakDuration = parseInt(breakDurationInput.value) * 60;
-    const longBreakDuration = parseInt(longBreakDurationInput.value) * 60;
-    const workSoundEnabled = workSoundEnabledInput.checked;
-    const breakSoundEnabled = breakSoundEnabledInput.checked;
+    const workDuration = parseInt((workDurationInput?.value ?? "25")) * 60; // Convert to seconds
+    const breakDuration = parseInt((breakDurationInput?.value ?? "5")) * 60;
+    const longBreakDuration = parseInt((longBreakDurationInput?.value ?? "15")) * 60;
+    const workSoundEnabled = !!workSoundEnabledInput?.checked;
+    const breakSoundEnabled = !!breakSoundEnabledInput?.checked;
 
     // Update timer worker with new durations
     if (timerWorker) {
