@@ -133,7 +133,12 @@ npm run tauri preview
 
 ## Changelog
 
-### Version 1.3.0 (Latest)
+### Version 1.3.1 (Latest)
+- 🛠️ Fix: Resolve TypeScript build errors in `main.ts` (null checks and settings inputs)
+- 🔊 Behavior: Tick sound plays based on settings for work and breaks
+- 📦 Release stability improvements
+
+### Version 1.3.0
 - ✨ **New Settings Menu**: Full-screen settings panel with gear icon in titlebar
 - ⚙️ **Customizable Timer Durations**: Adjust work, break, and long break durations
 - 🔊 **Enhanced Sound Control**: Separate toggles for work sounds and break sounds
