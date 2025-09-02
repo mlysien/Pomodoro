@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: pomodoro-tauri/package-lock.json
+          cache-dependency-path: app/package-lock.json
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -58,12 +58,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd pomodoro-tauri
+          cd app
           npm ci
 
       - name: Build application
         run: |
-          cd pomodoro-tauri
+          cd app
           npm run tauri build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,12 +73,12 @@ jobs:
         with:
           name: pomodoro-app-${{ matrix.platform }}
           path: |
-            pomodoro-tauri/src-tauri/target/release/bundle/
-            pomodoro-tauri/src-tauri/target/release/*.exe
-            pomodoro-tauri/src-tauri/target/release/*.dmg
-            pomodoro-tauri/src-tauri/target/release/*.AppImage
-            pomodoro-tauri/src-tauri/target/release/*.deb
-            pomodoro-tauri/src-tauri/target/release/*.msi
+            app/src-tauri/target/release/bundle/
+            app/src-tauri/target/release/*.exe
+            app/src-tauri/target/release/*.dmg
+            app/src-tauri/target/release/*.AppImage
+            app/src-tauri/target/release/*.deb
+            app/src-tauri/target/release/*.msi
 
   create-release:
     name: Create Release
