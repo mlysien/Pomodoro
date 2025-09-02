@@ -55,7 +55,7 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd Pomodoro/pomodoro-tauri
+   cd Pomodoro/app
    ```
 
 2. **Install dependencies**
@@ -107,7 +107,7 @@ A beautiful and functional Pomodoro timer application built with Tauri (Rust + T
 
 ### Project Structure
 ```
-pomodoro-tauri/
+app/
 ├── src/
 │   ├── main.ts              # Main application logic
 │   ├── timer-worker.ts      # Timer Web Worker
@@ -176,11 +176,11 @@ chmod +x scripts/release.sh
 
 1. **Update version numbers:**
    ```bash
-   cd pomodoro-tauri
+   cd app
    npm version 1.0.0 --no-git-tag-version
    ```
 
-2. **Update Tauri config version** in `pomodoro-tauri/src-tauri/tauri.conf.json`
+2. **Update Tauri config version** in `app/src-tauri/tauri.conf.json`
 
 3. **Create and push a tag:**
    ```bash
